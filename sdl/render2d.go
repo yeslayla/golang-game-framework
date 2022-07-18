@@ -13,6 +13,7 @@ type SdlRenderer2D struct {
 	window        *sdl.Window
 	renderer      *sdl.Renderer
 	currentCamera *rendering.Camera2D
+	inputHandler  *SdlEventHandler
 }
 
 type SdlRenderer2DInput struct {
@@ -53,7 +54,7 @@ func NewSdlRenderer2D(input SdlRenderer2DInput) *SdlRenderer2D {
 	return w
 }
 
-func (w SdlRenderer2D) Destroy() {
+func (w *SdlRenderer2D) Destroy() {
 	if err := w.window.Destroy(); err != nil {
 		log.Print("Failed to destroy SDL window: ", err)
 	}
@@ -68,17 +69,22 @@ func (w *SdlRenderer2D) SetCamera(camera *rendering.Camera2D) error {
 	return nil
 }
 
-func (w SdlRenderer2D) Update() error {
+func (w *SdlRenderer2D) Update() error {
 	for event := sdl.PollEvent(); event != nil; event = sdl.PollEvent() {
 		switch event.(type) {
 		case *sdl.QuitEvent:
 			return errors.New("Quit system not yet implemented!")
+		default:
+			if w.inputHandler != nil {
+				handler := *w.inputHandler
+				handler(event)
+			}
 		}
 	}
 	return nil
 }
 
-func (w SdlRenderer2D) DrawTexture2D(input rendering.DrawTexture2DInput) error {
+func (w *SdlRenderer2D) DrawTexture2D(input rendering.DrawTexture2DInput) error {
 	tex, ok := input.Texture.(*SdlTexture2D)
 	if !ok {
 		return errors.New("Texture is not an SdlTexture2D!")
@@ -117,7 +123,7 @@ func (w SdlRenderer2D) DrawTexture2D(input rendering.DrawTexture2DInput) error {
 	return nil
 }
 
-func (w SdlRenderer2D) Draw() error {
+func (w *SdlRenderer2D) Draw() error {
 
 	w.renderer.Present()
 

@@ -7,9 +7,10 @@ import (
 )
 
 type Node struct {
-	Name     string
-	children []INode
-	parent   INode
+	Name        string
+	children    []INode
+	parent      INode
+	processMode ProcessMode
 
 	onReadyMethods  []func() error
 	onUpdateMethods []func() error
@@ -41,9 +42,11 @@ func (node *Node) Update() error {
 		}
 	}
 
-	for _, updateMethod := range node.onUpdateMethods {
-		if err := updateMethod(); err != nil {
-			return err
+	if node.IsProcessing() {
+		for _, updateMethod := range node.onUpdateMethods {
+			if err := updateMethod(); err != nil {
+				return err
+			}
 		}
 	}
 
@@ -86,6 +89,25 @@ func (node *Node) OnDraw2D(callback func(rendering.Renderer2D) error) {
 	node.onDraw2dMethods = append(node.onDraw2dMethods, callback)
 }
 
+func (node *Node) IsProcessing() bool {
+	if node.processMode == DefaultProcessMode {
+		if node.parent != nil {
+			return node.parent.IsProcessing()
+		}
+		return true
+	}
+
+	return node.processMode == ActiveProcessMode
+}
+
+func (node *Node) GetProcessMode() ProcessMode {
+	return node.processMode
+}
+
+func (node *Node) SetProcessMode(mode ProcessMode) {
+	node.processMode = mode
+}
+
 func (node *Node) GetName() string {
 	return node.Name
 }
@@ -115,6 +137,7 @@ func (node *Node) GetParent() INode {
 
 func NewNode() Node {
 	return Node{
-		children: []INode{},
+		children:    []INode{},
+		processMode: DefaultProcessMode,
 	}
 }
