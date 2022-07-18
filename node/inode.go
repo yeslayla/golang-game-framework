@@ -15,4 +15,5 @@ type INode interface {
 	IsProcessing() bool
 	GetProcessMode() ProcessMode
 	SetProcessMode(ProcessMode)
+	Free() error
 }

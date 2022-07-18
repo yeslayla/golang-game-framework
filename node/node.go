@@ -1,6 +1,7 @@
 package node
 
 import (
+	"fmt"
 	"log"
 
 	"github.com/manleydev/golang-game-framework/rendering"
@@ -110,6 +111,26 @@ func (node *Node) SetProcessMode(mode ProcessMode) {
 
 func (node *Node) GetName() string {
 	return node.Name
+}
+
+func (node *Node) Free() error {
+
+	var parent *Node = node.parent.(*Node)
+	if err := parent.removeChild(node); err != nil {
+		return err
+	}
+	node.parent = nil
+	return nil
+}
+
+func (node *Node) removeChild(target *Node) error {
+	for i, child := range node.children {
+		if child == target {
+			node.children = append(node.children[:i], node.children[i+1:]...)
+			return nil
+		}
+	}
+	return fmt.Errorf("Could not remove child '%s', child not found on parent!", target.Name)
 }
 
 func (node *Node) GetChild(index int) INode {
