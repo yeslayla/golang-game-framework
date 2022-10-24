@@ -13,8 +13,8 @@ type Camera2D struct {
 	renderer *rendering.Renderer2D
 }
 
-func (camera *Camera2D) Update() error {
-	if err := camera.Node2D.Update(); err != nil {
+func (camera *Camera2D) Update(delta float64) error {
+	if err := camera.Node2D.Update(delta); err != nil {
 		return err
 	}
 

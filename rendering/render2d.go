@@ -8,7 +8,7 @@ type Renderer2D interface {
 	DrawTexture2D(DrawTexture2DInput) error
 
 	Draw() error
-	Update() error
+	Update(delta float64) error
 	Destroy()
 	SetCamera(*Camera2D) error
 }

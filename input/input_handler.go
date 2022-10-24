@@ -4,5 +4,5 @@ type InputHandler interface {
 	IsKeyDown(uint) bool
 	IsKeyJustPressed(uint) bool
 	IsKeyJustReleased(uint) bool
-	Update() error
+	Update(delta float64) error
 }

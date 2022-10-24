@@ -69,7 +69,7 @@ func (w *SdlRenderer2D) SetCamera(camera *rendering.Camera2D) error {
 	return nil
 }
 
-func (w *SdlRenderer2D) Update() error {
+func (w *SdlRenderer2D) Update(delta float64) error {
 	for event := sdl.PollEvent(); event != nil; event = sdl.PollEvent() {
 		switch event.(type) {
 		case *sdl.QuitEvent:

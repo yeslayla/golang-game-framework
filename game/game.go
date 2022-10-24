@@ -23,26 +23,26 @@ func Run(root *node.Node, renderer rendering.Renderer2D, inputHandler input.Inpu
 
 	rotation_speed := 0.01
 	speed := 0.02
-	g.OnUpdate(func() error {
+	g.OnUpdate(func(delta float64) error {
 
 		if inputHandler.IsKeyJustReleased(sdl.SCANCODE_SPACE) {
 			rotation_speed = -rotation_speed
 		}
 
 		if inputHandler.IsKeyDown(sdl.SCANCODE_D) {
-			g.Position.X += speed
+			g.Position.X += speed * delta
 		}
 		if inputHandler.IsKeyDown(sdl.SCANCODE_A) {
-			g.Position.X -= speed
+			g.Position.X -= speed * delta
 		}
 		if inputHandler.IsKeyDown(sdl.SCANCODE_S) {
-			g.Position.Y += speed
+			g.Position.Y += speed * delta
 		}
 		if inputHandler.IsKeyDown(sdl.SCANCODE_W) {
-			g.Position.Y -= speed
+			g.Position.Y -= speed * delta
 		}
 
-		g.Rotation += rotation_speed
+		g.Rotation += rotation_speed * delta
 		return nil
 	})
 
@@ -51,7 +51,7 @@ func Run(root *node.Node, renderer rendering.Renderer2D, inputHandler input.Inpu
 	controller.SetProcessMode(node.ActiveProcessMode)
 	defer root.AddChild(&controller)
 
-	controller.OnUpdate(func() error {
+	controller.OnUpdate(func(float64) error {
 		if inputHandler.IsKeyJustPressed(sdl.SCANCODE_ESCAPE) {
 			if g.IsProcessing() {
 				g.SetProcessMode(node.PausedProcessMode)

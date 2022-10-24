@@ -14,7 +14,7 @@ type Node struct {
 	processMode ProcessMode
 
 	onReadyMethods  []func() error
-	onUpdateMethods []func() error
+	onUpdateMethods []func(float64) error
 	onDraw2dMethods []func(rendering.Renderer2D) error
 }
 
@@ -36,16 +36,16 @@ func (node *Node) OnReady(callback func() error) {
 	node.onReadyMethods = append(node.onReadyMethods, callback)
 }
 
-func (node *Node) Update() error {
+func (node *Node) Update(delta float64) error {
 	for _, child := range node.children {
-		if err := child.Update(); err != nil {
+		if err := child.Update(delta); err != nil {
 			return err
 		}
 	}
 
 	if node.IsProcessing() {
 		for _, updateMethod := range node.onUpdateMethods {
-			if err := updateMethod(); err != nil {
+			if err := updateMethod(delta); err != nil {
 				return err
 			}
 		}
@@ -54,7 +54,7 @@ func (node *Node) Update() error {
 	return nil
 }
 
-func (node *Node) OnUpdate(callback func() error) {
+func (node *Node) OnUpdate(callback func(float64) error) {
 	if callback == nil {
 		return
 	}

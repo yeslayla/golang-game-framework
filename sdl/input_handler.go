@@ -37,7 +37,7 @@ func (input *SdlInputHandler) IsKeyJustReleased(key uint) bool {
 	return false
 }
 
-func (input *SdlInputHandler) Update() error {
+func (input *SdlInputHandler) Update(delta float64) error {
 	copy(input.lastKeyState, input.keyState)
 	input.keyState = sdl.GetKeyboardState()
 

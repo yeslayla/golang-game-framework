@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"time"
 
 	"github.com/manleydev/golang-game-framework/game"
 	"github.com/manleydev/golang-game-framework/input"
@@ -27,16 +28,18 @@ func main() {
 	game.Run(&root, renderer, input)
 
 	running := true
+	var lastTimestamp int64 = time.Now().UnixMicro()
+	var delta float64 = 0.0
 	for running {
 
-		if err := root.Update(); err != nil {
+		if err := root.Update(delta); err != nil {
 			log.Fatal("Update: ", err)
 		}
-		if err := input.Update(); err != nil {
+		if err := input.Update(delta); err != nil {
 			log.Fatal("Input Update: ", err)
 		}
 
-		if err := renderer.Update(); err != nil {
+		if err := renderer.Update(delta); err != nil {
 			log.Fatal("Renderer Update: ", err)
 		}
 
@@ -46,6 +49,10 @@ func main() {
 		if err := renderer.Draw(); err != nil {
 			log.Fatal("Renderer Draw: ", err)
 		}
+
+		newTimestamp := time.Now().UnixMicro()
+		delta = float64(lastTimestamp) / float64(newTimestamp)
+		lastTimestamp = newTimestamp
 
 	}
 }

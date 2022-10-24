@@ -10,7 +10,7 @@ const (
 
 type INode interface {
 	GetName() string
-	Update() error
+	Update(delta float64) error
 	ready(INode) error
 	IsProcessing() bool
 	GetProcessMode() ProcessMode
