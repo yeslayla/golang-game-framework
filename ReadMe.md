@@ -10,13 +10,19 @@ I have a strong desire to make this into a more flexible and feature complete sy
 
 ## Requirements
 
-Fedora:
+### Fedora
 
 ```bash
 sudo dnf install -y golang SDL2{,_image,_mixer,_ttf,_gfx}-devel
 ```
 
-Ubuntu:
+For static compilation:
+
+```bash
+sudo dnf install -y alsa-lib-devel libXext-devel libXcursor-devel libXi-devel libXrandr-devel libXxf86vm-devel libXScrnSaver-devel
+```
+
+#### Ubuntu:
 
 ```bash
 sudo apt install -y golang-go libsdl2{,-image,-mixer,-ttf,-gfx}-dev

@@ -1,10 +1,13 @@
 package sdl
 
 import (
+	"io/ioutil"
 	"log"
 
 	"github.com/manleydev/golang-game-framework/core"
+	"github.com/manleydev/golang-game-framework/importer"
 	"github.com/manleydev/golang-game-framework/rendering"
+
 	"github.com/veandco/go-sdl2/sdl"
 )
 
@@ -21,6 +24,48 @@ func NewSdlTexture2D(renderer rendering.Renderer2D, bmpPath string) *SdlTexture2
 
 	tex := SdlTexture2D{}
 	surface, err := sdl.LoadBMP(bmpPath)
+	if err != nil {
+		log.Print("Failed to load bmp: ", err)
+		return nil
+	}
+	defer surface.Free()
+
+	tex.texture, err = sdlRenderer.renderer.CreateTextureFromSurface(surface)
+	if err != nil {
+		log.Print("Failed to create SDL texture: ", err)
+		return nil
+	}
+
+	return &tex
+}
+
+func NewEmbededSdlTexture2D(renderer rendering.Renderer2D, bmpPath string) *SdlTexture2D {
+	sdlRenderer, ok := renderer.(*SdlRenderer2D)
+	if !ok {
+		log.Print("Renderer is not an SDL renderer")
+		return nil
+	}
+
+	f, err := importer.EmbededAssets.Open(bmpPath)
+	if err != nil {
+		log.Printf("Failed to load '%s' from embeded assets: %s", bmpPath, err)
+		return nil
+	}
+	defer f.Close()
+
+	raw, err := ioutil.ReadAll(f)
+	if err != nil {
+		log.Printf("Failed to read '%s' from embeded assets: %s", bmpPath, err)
+		return nil
+	}
+
+	buffer, err := sdl.RWFromMem(raw)
+	if err != nil {
+		log.Printf("Failed to create buffer for embeded asset '%s': %s", bmpPath, err)
+	}
+
+	tex := SdlTexture2D{}
+	surface, err := sdl.LoadBMPRW(buffer, true)
 	if err != nil {
 		log.Print("Failed to load bmp: ", err)
 		return nil

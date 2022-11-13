@@ -11,7 +11,7 @@ type SdlInputHandler struct {
 	lastKeyState []uint8
 }
 
-func (input *SdlInputHandler) IsKeyDown(key uint) bool {
+func (input *SdlInputHandler) IsKeyDown(key uint32) bool {
 	keys := sdl.GetKeyboardState()
 
 	if keys[key] == 1 {
@@ -21,7 +21,7 @@ func (input *SdlInputHandler) IsKeyDown(key uint) bool {
 	return false
 }
 
-func (input *SdlInputHandler) IsKeyJustPressed(key uint) bool {
+func (input *SdlInputHandler) IsKeyJustPressed(key uint32) bool {
 	if input.keyState[key] == 1 && input.lastKeyState[key] == 0 {
 		return true
 	}
@@ -29,7 +29,7 @@ func (input *SdlInputHandler) IsKeyJustPressed(key uint) bool {
 	return false
 }
 
-func (input *SdlInputHandler) IsKeyJustReleased(key uint) bool {
+func (input *SdlInputHandler) IsKeyJustReleased(key uint32) bool {
 	if input.keyState[key] == 0 && input.lastKeyState[key] == 1 {
 		return true
 	}

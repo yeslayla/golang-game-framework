@@ -1,8 +1,8 @@
 package input
 
 type InputHandler interface {
-	IsKeyDown(uint) bool
-	IsKeyJustPressed(uint) bool
-	IsKeyJustReleased(uint) bool
+	IsKeyDown(uint32) bool
+	IsKeyJustPressed(uint32) bool
+	IsKeyJustReleased(uint32) bool
 	Update(delta float64) error
 }

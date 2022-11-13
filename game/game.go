@@ -1,16 +1,23 @@
 package game
 
 import (
+	"embed"
 	"log"
 
+	"github.com/manleydev/golang-game-framework/importer"
 	"github.com/manleydev/golang-game-framework/input"
 	"github.com/manleydev/golang-game-framework/node"
 	"github.com/manleydev/golang-game-framework/rendering"
 	"github.com/manleydev/golang-game-framework/sdl"
 )
 
+//go:embed *.bmp
+var assets embed.FS
+
 func Run(root *node.Node, renderer rendering.Renderer2D, inputHandler input.InputHandler) {
-	texture := sdl.NewSdlTexture2D(renderer, "gopher.bmp")
+
+	importer.SetAssets(&assets)
+	texture := sdl.NewEmbededSdlTexture2D(renderer, "gopher.bmp")
 
 	g := node.NewSprite2D(texture)
 	g.Name = "Gopher"

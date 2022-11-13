@@ -37,7 +37,7 @@ func NewSdlRenderer2D(input SdlRenderer2DInput) *SdlRenderer2D {
 	}
 
 	if input.Fullscreen {
-		if err := w.window.SetFullscreen(sdl.WINDOW_FULLSCREEN_DESKTOP); err != nil {
+		if err := w.window.SetFullscreen(uint32(sdl.WINDOW_FULLSCREEN_DESKTOP)); err != nil {
 			log.Print("Failed to set fullscreen: ", err)
 			return nil
 		}
@@ -72,7 +72,7 @@ func (w *SdlRenderer2D) SetCamera(camera *rendering.Camera2D) error {
 func (w *SdlRenderer2D) Update(delta float64) error {
 	for event := sdl.PollEvent(); event != nil; event = sdl.PollEvent() {
 		switch event.(type) {
-		case *sdl.QuitEvent:
+		case sdl.QuitEvent:
 			return errors.New("Quit system not yet implemented!")
 		default:
 			if w.inputHandler != nil {
